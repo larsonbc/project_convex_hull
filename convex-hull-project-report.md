@@ -4,7 +4,10 @@
 
 ### Design Discussion
 
-*Fill me in*
+I talked with my coworker (software engineer) Jackson. We went over the convex
+hull homework, and then he asked me questions about it, testing my understanding.
+We walked through what the code my look like and what the time and space
+complexities would be.
 
 ### Theoretical Analysis - Convex Hull Divide-and-Conquer
 
