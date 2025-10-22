@@ -231,7 +231,7 @@ The overall space complexity of compute_hull_dvcq is **O(n log n)**.
 
 ### Design Discussion
 
-*Fill me in*
+All tests passed.
 
 ### Empirical Data - Convex Hull Divide-and-Conquer
 
@@ -346,7 +346,24 @@ Simplicity:
 
 ## Stretch 2
 
-*Fill me in*
+### Design Discussion
+
+I talked with Jackson. We talked about how in previous assignments, when 
+I needed to find my own dataset, it didn't work well, so I will probably use
+the provided COVID-19 dataset. We discussed further what kind of datasets would
+be relevant for a convex hull.
+
+### Dataset Discussion
+
+The Covid_19_Countrywise_timeseries.csv dataset contains time-series data tracking the COVID-19 pandemic across different countries over time. Each row represents a snapshot of COVID-19 statistics for a specific country on a particular observation date.
+
+When we apply convex hull analysis to COVID-19 data, we're identifying the extreme points or boundary cases in the relationship between two variables. The convex hull represents the "envelope" that contains all data points, defined by the most extreme observations.
+
+![img](confirmed-cases-vs-deaths.png)
+
+![img](confirmed-cases-vs-recovered.png)
+
+![img](deaths-vs-recovered.png)
 
 ## Project Review
 
