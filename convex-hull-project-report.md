@@ -266,6 +266,8 @@ AI like this.
 
 ### Chosen Convex Hull Implementation Description
 
+I implemented Jarvis's March (Gift Wrapping) algorithm.
+
 Step 1: Find the Starting Point
 
 First, find the leftmost point in the set (the point with the smallest x-coordinate). This point is guaranteed to be on the convex hull because no point can be to its left, meaning it must be on the outer boundary.
