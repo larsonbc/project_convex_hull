@@ -237,22 +237,23 @@ The overall space complexity of compute_hull_dvcq is **O(n log n)**.
 
 | N     | time (ms) |
 |-------|-----------|
-| 10    |           |
-| 100   |           |
-| 1000  |           |
-| 10000 |           |
-| 20000 |           |
-| 40000 |           |
-| 50000 |           |
+| 10    | 0.0       |
+| 100   | 0.2       |
+| 1000  | 3.0       |
+| 10000 | 22.1      |
+| 20000 | 45.4      |
+| 40000 | 90.5      |
+| 50000 | 106.4     |
 
 ### Comparison of Theoretical and Empirical Results
 
-- Theoretical order of growth: *copy from section above* 
+- Theoretical order of growth: **O(n log n)**
 - Empirical order of growth (if different from theoretical): 
 
-![img](img.png)
+![img](core-timing-analysis.png)
 
-*Fill me in*
+When n doubles from 20000 to 40000, time goes from 45.4ms to 90.5ms (almost exactly double).
+This doubling behavior is characteristic of O(n log n) because: (2n)log(2n) = 2n·log(n) + 2n·log(2) ≈ 2n·log(n) for large n.
 
 ## Stretch 1
 
