@@ -248,7 +248,7 @@ The overall space complexity of compute_hull_dvcq is **O(n log n)**.
 ### Comparison of Theoretical and Empirical Results
 
 - Theoretical order of growth: **O(n log n)**
-- Empirical order of growth (if different from theoretical): 
+- Empirical order of growth (if different from theoretical): matches theoretical
 
 ![img](core-timing-analysis.png)
 
@@ -259,33 +259,90 @@ This doubling behavior is characteristic of O(n log n) because: (2n)log(2n) = 2n
 
 ### Design Discussion
 
-*Fill me in*
+I talked with Jackson about other ways we could implement convex hull.
+Since AI is allowed, we used ChatGPT to help us come up with some ideas.
+We found that it is important to understand what is going on when using
+AI like this.
 
 ### Chosen Convex Hull Implementation Description
 
-*Fill me in*
+Step 1: Find the Starting Point
+
+First, find the leftmost point in the set (the point with the smallest x-coordinate). This point is guaranteed to be on the convex hull because no point can be to its left, meaning it must be on the outer boundary.
+If multiple points share the same smallest x-coordinate, choose the one with the smallest y-coordinate.
+Example: Given points {(3,2), (1,4), (5,3), (1,1), (4,5)}, the starting point is (1,1).
+
+
+Step 2: Initialize the Hull
+
+Create an empty list to store the hull points. Set the current point to be the starting point.
+
+Step 3: Find the Next Hull Point
+
+This is the core of the algorithm. For the current point, we need to find which point comes next on the hull by:
+
+Consider all points as candidates for the next hull point
+For each candidate, determine if it is "more counter-clockwise" than the current best candidate
+Use the cross product to determine orientation:
+
+Given three points: current, candidate A, and candidate B
+Calculate: (A.x - current.x) × (B.y - current.y) - (A.y - current.y) × (B.x - current.x)
+If result > 0: B is to the left of line current→A (B is more counter-clockwise)
+If result < 0: B is to the right of line current→A (A is more counter-clockwise)
+If result = 0: The points are collinear (on the same line)
+
+
+Keep the most counter-clockwise point - the one that would be reached first if you rotated a line counter-clockwise from the current point
+
+Analogy: Imagine standing at the current point and sweeping your arm counter-clockwise. The next hull point is the first point your arm would touch.
+
+Step 4: Handle Collinear Points
+
+If multiple points are collinear (lie on the same line from the current point), choose the farthest one. This ensures we don't include interior collinear points in the hull.
+We determine distance using the squared distance formula: (x₂ - x₁)² + (y₂ - y₁)² (we use squared distance to avoid the expensive square root operation).
+
+Step 5: Move to the Next Point
+Once we've identified the next hull point:
+
+Add the current point to the hull list
+Set current = next hull point
+Repeat Step 3 to find the point after this one
+
+Step 6: Detect Completion
+Continue wrapping around the points until the next hull point we select is the starting point. This means we've completed the loop around the hull.
+When this happens, stop the algorithm. The hull list now contains all points on the convex hull, in counter-clockwise order.
 
 ### Empirical Data
 
 | N     | time (ms) |
 |-------|-----------|
-| 10    |           |
-| 100   |           |
-| 1000  |           |
-| 10000 |           |
-| 20000 |           |
-| 40000 |           |
-| 50000 |           |
+| 10    | 0.0       |
+| 100   | 0.1       |
+| 1000  | 1.2       |
+| 10000 | 15.8      |
+| 20000 | 35.2      |
+| 40000 | 75.4      |
+| 50000 | 98.6      |
 
 ### Comparison of Chosen Algorithm with Divide-and-Conquer Convex Hull
 
 #### Algorithmic Differences
 
-*Fill me in*
+Problem Decomposition:
+* Divide & Conquer breaks the problem spatially (left/right), while Gift Wrapping processes points sequentially around the perimeter
+
+Work Distribution: 
+* Divide & Conquer does logarithmic layers of linear work; Gift Wrapping does h iterations of linear work
+
+Predictability: 
+* Divide & Conquer always takes O(n log n) time; Gift Wrapping ranges from O(n) to O(n²)
+
+Simplicity: 
+* Gift Wrapping is more intuitive (imagine wrapping string around nails), while Divide & Conquer requires careful tangent calculations and merging logic
 
 #### Performance Differences
 
-*Fill me in*
+![img](time-comparison.png)
 
 ## Stretch 2
 

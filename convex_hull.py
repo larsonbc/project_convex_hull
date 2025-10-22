@@ -204,4 +204,62 @@ def slope(p1: tuple[float, float], p2: tuple[float, float]) -> float:
 
 def compute_hull_other(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
     """Return the subset of provided points that define the convex hull"""
-    return []
+    # return []
+
+    if len(points) < 3:
+        return points
+
+        # Find the leftmost point (guaranteed to be on hull)
+    start = min(points, key=lambda p: (p[0], p[1]))
+
+    hull = []
+    current = start
+
+    while True:
+        hull.append(current)
+        next_point = points[0]
+
+        # Find the most counter-clockwise point from current
+        for candidate in points:
+            if candidate == current:
+                continue
+
+            # If next_point is the same as current, or candidate is more counter-clockwise
+            if next_point == current:
+                next_point = candidate
+            else:
+                # Use cross product to determine orientation
+                cross = orientation(current, next_point, candidate)
+
+                # If candidate is more counter-clockwise (or collinear but farther)
+                if cross > 0:
+                    next_point = candidate
+                elif cross == 0:
+                    # Collinear case - pick the farther point
+                    if distance_squared(current, candidate) > distance_squared(current, next_point):
+                        next_point = candidate
+
+        current = next_point
+
+        # If we've wrapped around to the start, we're done
+        if current == start:
+            break
+
+    return hull
+
+
+def orientation(p: tuple[float, float], q: tuple[float, float],
+                r: tuple[float, float]) -> float:
+    """
+    Calculate orientation of ordered triplet (p, q, r).
+    Returns:
+        > 0: counter-clockwise (r is left of line p->q)
+        = 0: collinear
+        < 0: clockwise (r is right of line p->q)
+    """
+    return (q[0] - p[0]) * (r[1] - p[1]) - (q[1] - p[1]) * (r[0] - p[0])
+
+
+def distance_squared(p1: tuple[float, float], p2: tuple[float, float]) -> float:
+    """Calculate squared distance between two points (avoids sqrt for efficiency)"""
+    return (p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2
